@@ -11,7 +11,9 @@ import {
   getEmailExist,
   resetPassword,
   cambiarHabilitado,
-  bloquear
+  bloquear,
+  verificarRecuperacionPorPregunta,
+  recuperarContraseñaPorPregunta
 } from "../controllers/users.controller"; // Asegúrate de importar los controladores de usuarios
 
 const router =  Router();
@@ -39,6 +41,10 @@ router.post("/users/reset-password", resetPassword);
 router.post("/users/resert-Habilitado", cambiarHabilitado );
 
 router.post("/users/bloquearCuenta", bloquear);
+
+router.post("/users/recuperacionpregunta", verificarRecuperacionPorPregunta)
+
+router.post("/users/reset-password-pregunta", recuperarContraseñaPorPregunta)
 
 
 export default router;

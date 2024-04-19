@@ -3,6 +3,11 @@ import cors from "cors";
 import productRoutes from "./routes/products.routes";
 import usersRoutes from "./routes/users.routes";
 import emailRoutes from "./routes/email.routes";
+import preguntasRoutes from "./routes/preguntas.routes";
+import citasRoutes from "./routes/citas.routes";
+import pacientesRoutes from "./routes/pacientes.routes";
+import notasRoutes from "./routes/notas.routes";
+import horariosRoutes from "./routes/horarios.routes";
 import morgan from "morgan";
 
 import config from "./config";
@@ -34,5 +39,10 @@ app.get("/", (req, res) => {
 app.use("/api", productRoutes);
 app.use("/api", usersRoutes);
 app.use("/api", emailRoutes);
+app.use("/api", preguntasRoutes);
+app.use("/api", citasRoutes);
+app.use("/api", pacientesRoutes);
+app.use("/api", notasRoutes);
+app.use("/api", horariosRoutes);
 
 export { app };

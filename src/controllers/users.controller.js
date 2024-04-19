@@ -16,10 +16,10 @@ export const getUsers = async (req, res) => {
 };
 
 export const createNewUser = async (req, res) => {
-  const { Nombre, Correo, Pass, Telefono, Registro_Pass} = req.body;
+  const { Nombre, Correo, Pass, Telefono, Registro_Pass, IdPregunta, Respuesta} = req.body;
 
   // Validación
-  if (Nombre == null || Correo == null || Pass == null  || Telefono ==null|| Registro_Pass ==null) {
+  if (Nombre == null || Correo == null || Pass == null  || Telefono ==null|| Registro_Pass ==null|| IdPregunta == null || Respuesta == null) {
     return res.status(400).json({ msg: "Por favor rellena todos los campos" });
   }
 
@@ -50,6 +50,8 @@ export const createNewUser = async (req, res) => {
       .input("Logueo", sql.DateTime, new Date())
       .input("IdRol", sql.Int, 1)
       .input("IdTipo", sql.Int, 4)
+      .input("IdPregunta", sql.Int, IdPregunta)
+      .input("Respuesta", sql.VarChar, Respuesta)
       .query(querysUsers.addNewUser);
 
     res.json({ Nombre, Correo, randomCode });
@@ -370,12 +372,72 @@ export const bloquear = async (req, res) => {
     };
 
     // Envío del correo de notificación
-    const info = await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions); 
     console.log('Correo de notificación enviado:', info.response);
 
     res.json({ msg: 'Se realizó un bloqueo de tu cuenta. Verifica con el encargado para restablecer.' });
   } catch (error) {
     console.error('Error al bloquear usuario:', error);
     res.status(500).json({ msg: 'Error al bloquear usuario' });
+  }
+};
+
+
+export const verificarRecuperacionPorPregunta = async (req, res) => {
+  const { Correo, IdPregunta, Respuesta } = req.body;
+  console.log(Correo);
+  console.log(IdPregunta);
+  console.log(Respuesta);
+  try {
+    const pool = await getConnection();
+
+    // Verifica si existe un usuario con el correo electrónico y la pregunta de seguridad proporcionados
+    const userExistResult = await pool
+      .request()
+      .input("Correo", sql.VarChar, Correo)
+      .input("IdPregunta", sql.Int, IdPregunta)
+      .input("Respuesta", sql.VarChar, Respuesta)
+      .query(querysUsers.verificarPreguntaSeguridad);
+
+    if (userExistResult.recordset.length === 0) {
+      return res.status(404).json({ msg: "Usuario no encontrado o respuesta incorrecta a la pregunta de seguridad" });
+    }
+
+    res.json({ msg: "Usuario Correcto" });
+  } catch (error) {
+    console.error('Error al verificar la recuperación de contraseña por pregunta:', error);
+    res.status(500).json({ msg: 'Error interno del servidor al verificar la recuperación de contraseña' });
+  }
+};
+
+export const recuperarContraseñaPorPregunta = async (req, res) => {
+  const { Correo, IdPregunta, Respuesta, NuevaContraseña } = req.body;
+
+  try {
+    const pool = await getConnection();
+
+    // Verifica si existe un usuario con el correo electrónico y la pregunta de seguridad proporcionados
+    const userExistResult = await pool
+      .request()
+      .input("Correo", sql.VarChar, Correo)
+      .input("IdPregunta", sql.Int, IdPregunta)
+      .input("Respuesta", sql.VarChar, Respuesta)
+      .query(querysUsers.verificarPreguntaSeguridad);
+
+    if (userExistResult.recordset.length === 0) {
+      return res.status(404).json({ msg: "Usuario no encontrado o respuesta incorrecta a la pregunta de seguridad" });
+    }
+
+    // Actualiza la contraseña del usuario
+    await pool
+      .request()
+      .input("Pass", sql.VarChar, NuevaContraseña)
+      .input("Correo", sql.VarChar, Correo)
+      .query(querysUsers.actualizarContraseña);
+
+    res.json({ msg: "Contraseña restablecida con éxito" });
+  } catch (error) {
+    console.error('Error al restablecer la contraseña:', error);
+    res.status(500).json({ msg: 'Error interno del servidor al restablecer la contraseña' });
   }
 };
