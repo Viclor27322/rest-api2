@@ -126,7 +126,7 @@ async function verificarCitasUsuarioDia(idPaciente, HorarioInicio) {
       res.status(500).json({ msg: 'Error interno del servidor al actualizar cita' });
     }
   };
-  
+   
   export const actualizarCitasDisponibles = async (req, res) => {
     const { id } = req.params;
     const { IdPaciente } = req.body;
