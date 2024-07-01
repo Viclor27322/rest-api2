@@ -24,6 +24,16 @@ export const getCitasDisponibles = async (req, res) => {
   }
 };
 
+export const getAllCitasHoy = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const result = await pool.request().query(querysCitas.getAllCitasDay);
+    res.json(result.recordset);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 // Función para obtener una cita por su ID
 export const getCitaById = async (req, res) => {
   const { IdCita } = req.params;

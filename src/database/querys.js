@@ -40,7 +40,8 @@ export const querysCitas = {
   updateCitaDisponible: "UPDATE Citas SET IdPaciente=@IdPaciente, Estado=1 WHERE IdCita=@IdCita",
   verificarCitasHorario: "SELECT * FROM Citas WHERE (@HorarioInicio BETWEEN HorarioInicio AND HoraFin OR @HoraFin BETWEEN HorarioInicio AND HoraFin) OR (HorarioInicio BETWEEN @HorarioInicio AND @HoraFin OR HoraFin BETWEEN @HorarioInicio AND @HoraFin);",
   verificarCitasDobles: "SELECT * FROM Citas WHERE idPaciente = @idPaciente AND CONVERT(date, HorarioInicio) = CONVERT(date, @HorarioInicio);",
-  deleteCitasHorario: "DELETE FROM Citas WHERE DATEPART(dw, HorarioInicio) = @numeroDia and idPaciente=10 "
+  deleteCitasHorario: "DELETE FROM Citas WHERE DATEPART(dw, HorarioInicio) = @numeroDia and idPaciente=10 ",
+  getAllCitasDay: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE CAST(HorarioInicio AS DATE) = CAST(GETDATE() AS DATE)",
 }
 
 export const querysPreguntas = {
