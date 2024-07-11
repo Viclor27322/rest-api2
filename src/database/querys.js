@@ -42,8 +42,8 @@ export const querysCitas = {
   verificarCitasDobles: "SELECT * FROM Citas WHERE idPaciente = @idPaciente AND CONVERT(date, HorarioInicio) = CONVERT(date, @HorarioInicio);",
   deleteCitasHorario: "DELETE FROM Citas WHERE DATEPART(dw, HorarioInicio) = @numeroDia and idPaciente=10 ",
   getAllCitasDay: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE CAST(HorarioInicio AS DATE) = CAST(GETDATE() AS DATE) order by HorarioInicio ",
-  getCitasByDayOfWeek: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATEPART(dw, HorarioInicio) = @numeroDia order by HorarioInicio",
-  getCitasByDayOfWeekAndTime: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATEPART(dw, HorarioInicio) = @numeroDia AND HorarioInicio >= @HoraInicio order by HorarioInicio",
+  getCitasByDayOfWeek: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATEPART(dw, HorarioInicio) = @numeroDia AND DATEPART(week, HorarioInicio) = DATEPART(week, GETDATE()) AND DATEPART(year, HorarioInicio) = DATEPART(year, GETDATE()) ORDER BY HorarioInicio",
+  getCitasByDayOfWeekAndTime: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATEPART(dw, HorarioInicio) = @numeroDia AND HorarioInicio >= @HoraInicio AND DATEPART(week, HorarioInicio) = DATEPART(week, GETDATE()) AND DATEPART(year, HorarioInicio) = DATEPART(year, GETDATE()) order by HorarioInicio",
 }
 
 export const querysPreguntas = {

@@ -35,7 +35,10 @@ export const getAllCitasHoy = async (req, res) => {
 };
 
 export const getCitasByDayOfWeek = async (req, res) => {
-  const numeroDia = req.params.numeroDia;
+  const numeroDia = parseInt(req.params.numeroDia);
+  if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
+    return res.status(400).send('El número de día de la semana es inválido');
+  }
   try {
       const result = await pool.request()
           .input('numeroDia', sql.Int, numeroDia)
@@ -50,8 +53,19 @@ export const getCitasByDayOfWeek = async (req, res) => {
 
 
 export const getCitasByDayOfWeekAndTime = async (req, res) => {
-  const numeroDia = req.params.numeroDia;
+  const numeroDia = parseInt(req.params.numeroDia);
   const horaInicio = req.params.horaInicio;
+
+  // Verifica si el parámetro numeroDia es un número válido entre 1 y 7
+  if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
+    return res.status(400).send('El número de día de la semana es inválido');
+  }
+
+  // Verifica si el parámetro horaInicio es una hora válida en formato HH:MM:SS
+  const horaInicioRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+  if (!horaInicioRegex.test(horaInicio)) {
+    return res.status(400).send('El formato de la hora de inicio es inválido');
+  }
   try {
       const result = await pool.request()
           .input('numeroDia', sql.Int, numeroDia)
