@@ -34,6 +34,37 @@ export const getAllCitasHoy = async (req, res) => {
   }
 };
 
+export const getCitasByDayOfWeek = async (req, res) => {
+  const numeroDia = req.params.numeroDia;
+  try {
+      const result = await pool.request()
+          .input('numeroDia', sql.Int, numeroDia)
+          .query(querysCitas.getCitasByDayOfWeek);
+
+      res.json(result.recordset);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error al obtener las citas');
+  }
+};
+
+
+export const getCitasByDayOfWeekAndTime = async (req, res) => {
+  const numeroDia = req.params.numeroDia;
+  const horaInicio = req.params.horaInicio;
+  try {
+      const result = await pool.request()
+          .input('numeroDia', sql.Int, numeroDia)
+          .input('HoraInicio', sql.Time, horaInicio)
+          .query(querysCitas.getCitasByDayOfWeekAndTime);
+
+      res.json(result.recordset);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error al obtener las citas');
+  }
+};
+
 // Función para obtener una cita por su ID
 export const getCitaById = async (req, res) => {
   const { IdCita } = req.params;
