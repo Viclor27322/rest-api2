@@ -40,6 +40,7 @@ export const getCitasByDayOfWeek = async (req, res) => {
     return res.status(400).send('El número de día de la semana es inválido');
   }
   try {
+      const pool = await getConnection();
       const result = await pool.request()
           .input('numeroDia', sql.Int, numeroDia)
           .query(querysCitas.getCitasByDayOfWeek);
@@ -67,6 +68,7 @@ export const getCitasByDayOfWeekAndTime = async (req, res) => {
     return res.status(400).send('El formato de la hora de inicio es inválido');
   }
   try {
+      const pool = await getConnection();
       const result = await pool.request()
           .input('numeroDia', sql.Int, numeroDia)
           .input('HoraInicio', sql.Time, horaInicio)
