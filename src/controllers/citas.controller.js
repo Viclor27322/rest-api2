@@ -53,11 +53,12 @@ export const getCitasByDayOfWeek = async (req, res) => {
 };
 
 
+
 export const getCitasByDayOfWeekAndTime = async (req, res) => {
   const numeroDia = parseInt(req.params.numeroDia);
   let horaInicio = req.params.horaInicio;
   console.log(horaInicio);
-  
+
   // Verifica si el parámetro numeroDia es un número válido entre 1 y 7
   if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
     return res.status(400).send('El número de día de la semana es inválido');
@@ -69,21 +70,21 @@ export const getCitasByDayOfWeekAndTime = async (req, res) => {
     return res.status(400).send('El formato de la hora de inicio es inválido');
   }
 
-  // Convertir a TIME de SQL Server usando moment.js
-  const horaInicioSQL = moment(horaInicio, 'HH:mm:ss').format('HH:mm:ss');
-  console.log(`horaInicioSQL: ${horaInicioSQL}`);
+  // Extraer solo la hora (HH) del parámetro horaInicio
+  const horaSolo = horaInicio.split(':')[0];
+  console.log(`horaSolo: ${horaSolo}`);
 
   try {
     const pool = await getConnection();
     const result = await pool.request()
       .input('numeroDia', sql.Int, numeroDia)
-      .input('HoraInicio', sql.VarChar, horaInicioSQL)  // Cambiamos el tipo de input a VarChar
+      .input('HoraSolo', sql.Int, parseInt(horaSolo)) // Cambiar el tipo de input a Int
       .query(`
         SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP
         FROM Citas
         INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente
         WHERE DATEPART(dw, HorarioInicio) = @numeroDia
-          AND CAST(HorarioInicio AS TIME) >= CAST(@HoraInicio AS TIME)
+          AND DATEPART(hour, HorarioInicio) = @HoraSolo  -- Comparar solo la hora
           AND DATEPART(week, HorarioInicio) = DATEPART(week, GETDATE())
           AND DATEPART(year, HorarioInicio) = DATEPART(year, GETDATE())
         ORDER BY HorarioInicio
@@ -95,6 +96,8 @@ export const getCitasByDayOfWeekAndTime = async (req, res) => {
     res.status(500).send('Error al obtener las citas');
   }
 };
+
+
 
 
 // Función para obtener una cita por su ID
