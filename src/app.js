@@ -8,6 +8,7 @@ import citasRoutes from "./routes/citas.routes";
 import pacientesRoutes from "./routes/pacientes.routes";
 import notasRoutes from "./routes/notas.routes";
 import horariosRoutes from "./routes/horarios.routes";
+import cruzRoutes from "./routes/cruzroja.routes";
 import morgan from "morgan";
 
 import config from "./config";
@@ -46,61 +47,6 @@ app.use("/api", citasRoutes);
 app.use("/api", pacientesRoutes);
 app.use("/api", notasRoutes);
 app.use("/api", horariosRoutes);
-// Endpoint para obtener todas las citas de hoy
-app.get('/citas/hoy', async (req, res) => {
-  try {
-      const result = await sql.query(`
-          SELECT * FROM Citas
-          WHERE fecha = CAST(GETDATE() AS DATE)
-      `);
-      res.json(result.recordset);
-  } catch (err) {
-      res.status(500).send('Error retrieving data from database');
-  }
-});
-
-// Endpoint para obtener citas de hoy en un rango de horas
-app.get('/citas/hoy/rango', async (req, res) => {
-  const { horaInicio, horaFin } = req.query;
-  try {
-      const result = await sql.query(`
-          SELECT * FROM Citas
-          WHERE fecha = CAST(GETDATE() AS DATE)
-          AND hora BETWEEN '${horaInicio}' AND '${horaFin}'
-      `);
-      res.json(result.recordset);
-  } catch (err) {
-      res.status(500).send('Error retrieving data from database');
-  }
-});
-
-// Endpoint para obtener una cantidad limitada de citas de hoy
-app.get('/citas/hoy/limite', async (req, res) => {
-  const { limite } = req.query;
-  try {
-      const result = await sql.query(`
-          SELECT TOP (${limite}) * FROM Citas
-          WHERE fecha = CAST(GETDATE() AS DATE)
-      `);
-      res.json(result.recordset);
-  } catch (err) {
-      res.status(500).send('Error retrieving data from database');
-  }
-});
-
-// Endpoint para obtener citas de hoy según el tipo de cita
-app.get('/citas/hoy/tipo', async (req, res) => {
-  const { tipo } = req.query;
-  try {
-      const result = await sql.query(`
-          SELECT * FROM Citas
-          WHERE fecha = CAST(GETDATE() AS DATE)
-          AND tipo_de_cita = '${tipo}'
-      `);
-      res.json(result.recordset);
-  } catch (err) {
-      res.status(500).send('Error retrieving data from database');
-  }
-});
+app.use("/api", cruzRoutes);
 
 export { app };

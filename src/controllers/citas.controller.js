@@ -55,8 +55,9 @@ export const getCitasByDayOfWeek = async (req, res) => {
 
 export const getCitasByDayOfWeekAndTime = async (req, res) => {
   const numeroDia = parseInt(req.params.numeroDia);
-  const horaInicio = req.params.horaInicio;
-
+  let horaInicio = req.params.horaInicio;
+  console.log(horaInicio);
+  
   // Verifica si el parámetro numeroDia es un número válido entre 1 y 7
   if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
     return res.status(400).send('El número de día de la semana es inválido');
@@ -67,19 +68,24 @@ export const getCitasByDayOfWeekAndTime = async (req, res) => {
   if (!horaInicioRegex.test(horaInicio)) {
     return res.status(400).send('El formato de la hora de inicio es inválido');
   }
-  try {
-      const pool = await getConnection();
-      const result = await pool.request()
-          .input('numeroDia', sql.Int, numeroDia)
-          .input('HoraInicio', sql.Time, horaInicio)
-          .query(querysCitas.getCitasByDayOfWeekAndTime);
 
-      res.json(result.recordset);
+  // Convertir a TIME de SQL Server
+  horaInicio = new Date(`1970-01-01T${horaInicio}Z`).toISOString().split('T')[1].slice(0, 8);
+
+  try {
+    const pool = await getConnection();
+    const result = await pool.request()
+      .input('numeroDia', sql.Int, numeroDia)
+      .input('HoraInicio', sql.Time, horaInicio)
+      .query(querysCitas.getCitasByDayOfWeekAndTime);
+
+    res.json(result.recordset);
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Error al obtener las citas');
+    console.error(error);
+    res.status(500).send('Error al obtener las citas');
   }
 };
+
 
 // Función para obtener una cita por su ID
 export const getCitaById = async (req, res) => {
