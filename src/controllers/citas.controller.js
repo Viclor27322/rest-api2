@@ -69,15 +69,25 @@ export const getCitasByDayOfWeekAndTime = async (req, res) => {
     return res.status(400).send('El formato de la hora de inicio es inválido');
   }
 
-  // Convertir a TIME de SQL Server
-  horaInicio = new Date(`1970-01-01T${horaInicio}Z`).toISOString().split('T')[1].slice(0, 8);
+  // Convertir a TIME de SQL Server usando moment.js
+  const horaInicioSQL = moment(horaInicio, 'HH:mm:ss').format('HH:mm:ss');
+  console.log(`horaInicioSQL: ${horaInicioSQL}`);
 
   try {
     const pool = await getConnection();
     const result = await pool.request()
       .input('numeroDia', sql.Int, numeroDia)
-      .input('HoraInicio', sql.Time, horaInicio)
-      .query(querysCitas.getCitasByDayOfWeekAndTime);
+      .input('HoraInicio', sql.VarChar, horaInicioSQL)  // Cambiamos el tipo de input a VarChar
+      .query(`
+        SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP
+        FROM Citas
+        INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente
+        WHERE DATEPART(dw, HorarioInicio) = @numeroDia
+          AND CAST(HorarioInicio AS TIME) >= CAST(@HoraInicio AS TIME)
+          AND DATEPART(week, HorarioInicio) = DATEPART(week, GETDATE())
+          AND DATEPART(year, HorarioInicio) = DATEPART(year, GETDATE())
+        ORDER BY HorarioInicio
+      `);
 
     res.json(result.recordset);
   } catch (error) {

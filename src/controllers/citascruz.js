@@ -5,7 +5,7 @@ exports.getCitasHoy = async (req, res) => {
     try {
         const result = await sql.query(`
             SELECT * FROM Citas_CruzRoja
-            WHERE fecha = CAST(GETDATE() AS DATE)
+            WHERE CAST(fecha AS DATE) = CAST(GETDATE() AS DATE) order by fecha 
         `);
         res.json(result.recordset);
     } catch (err) {
