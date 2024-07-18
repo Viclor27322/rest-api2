@@ -8,6 +8,7 @@ import citasRoutes from "./routes/citas.routes";
 import pacientesRoutes from "./routes/pacientes.routes";
 import notasRoutes from "./routes/notas.routes";
 import horariosRoutes from "./routes/horarios.routes";
+import cruzRoutes from "./routes/cruzroja.routes";
 import morgan from "morgan";
 
 import config from "./config";
@@ -16,6 +17,8 @@ const app = express();
 
 // settings
 app.set("port", config.port);
+
+
 
 // Middlewares
 app.use(cors());
@@ -44,5 +47,6 @@ app.use("/api", citasRoutes);
 app.use("/api", pacientesRoutes);
 app.use("/api", notasRoutes);
 app.use("/api", horariosRoutes);
+app.use("/api", cruzRoutes);
 
 export { app };

@@ -35,8 +35,12 @@ export const getAllCitasHoy = async (req, res) => {
 };
 
 export const getCitasByDayOfWeek = async (req, res) => {
-  const numeroDia = req.params.numeroDia;
+  const numeroDia = parseInt(req.params.numeroDia);
+  if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
+    return res.status(400).send('El número de día de la semana es inválido');
+  }
   try {
+      const pool = await getConnection();
       const result = await pool.request()
           .input('numeroDia', sql.Int, numeroDia)
           .query(querysCitas.getCitasByDayOfWeek);
@@ -49,21 +53,52 @@ export const getCitasByDayOfWeek = async (req, res) => {
 };
 
 
-export const getCitasByDayOfWeekAndTime = async (req, res) => {
-  const numeroDia = req.params.numeroDia;
-  const horaInicio = req.params.horaInicio;
-  try {
-      const result = await pool.request()
-          .input('numeroDia', sql.Int, numeroDia)
-          .input('HoraInicio', sql.Time, horaInicio)
-          .query(querysCitas.getCitasByDayOfWeekAndTime);
 
-      res.json(result.recordset);
+export const getCitasByDayOfWeekAndTime = async (req, res) => {
+  const numeroDia = parseInt(req.params.numeroDia);
+  let horaInicio = req.params.horaInicio;
+  console.log(horaInicio);
+
+  // Verifica si el parámetro numeroDia es un número válido entre 1 y 7
+  if (isNaN(numeroDia) || numeroDia < 1 || numeroDia > 7) {
+    return res.status(400).send('El número de día de la semana es inválido');
+  }
+
+  // Verifica si el parámetro horaInicio es una hora válida en formato HH:MM:SS
+  const horaInicioRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+  if (!horaInicioRegex.test(horaInicio)) {
+    return res.status(400).send('El formato de la hora de inicio es inválido');
+  }
+
+  // Extraer solo la hora (HH) del parámetro horaInicio
+  const horaSolo = horaInicio.split(':')[0];
+  console.log(`horaSolo: ${horaSolo}`);
+
+  try {
+    const pool = await getConnection();
+    const result = await pool.request()
+      .input('numeroDia', sql.Int, numeroDia)
+      .input('HoraSolo', sql.Int, parseInt(horaSolo)) // Cambiar el tipo de input a Int
+      .query(`
+        SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP
+        FROM Citas
+        INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente
+        WHERE DATEPART(dw, HorarioInicio) = @numeroDia
+          AND DATEPART(hour, HorarioInicio) = @HoraSolo  -- Comparar solo la hora
+          AND DATEPART(week, HorarioInicio) = DATEPART(week, GETDATE())
+          AND DATEPART(year, HorarioInicio) = DATEPART(year, GETDATE())
+        ORDER BY HorarioInicio
+      `);
+
+    res.json(result.recordset);
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Error al obtener las citas');
+    console.error(error);
+    res.status(500).send('Error al obtener las citas');
   }
 };
+
+
+
 
 // Función para obtener una cita por su ID
 export const getCitaById = async (req, res) => {

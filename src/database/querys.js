@@ -1,4 +1,3 @@
-import { getCitasByPatientFullName } from "../controllers/citas.controller";
 
 export const querys = {
   getAllProducts: "SELECT * FROM Productos",
