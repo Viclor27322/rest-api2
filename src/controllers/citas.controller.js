@@ -262,3 +262,24 @@ export const addSpecificCita = async (IdUser, idPaciente, HorarioInicio, HoraFin
   }
 };
 
+// En tu controlador, por ejemplo, citas.controller.js
+export const getCitasByPatientFullName = async (req, res) => {
+  const { nombre, apellidoP, apellidoM } = req.params;
+  console.log(nombre)
+  console.log(apellidoP)
+  console.log(apellidoM)
+  try {
+    const pool = await getConnection();
+    const result = await pool.request()
+      .input('Nombre', sql.NVarChar, nombre)
+      .input('ApellidoP', sql.NVarChar, apellidoP)
+      .input('ApellidoM', sql.NVarChar, apellidoM)
+      .query(querysCitas.getCitasByPatientFullName);
+
+    res.json(result.recordset);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener las citas');
+  }
+};
+

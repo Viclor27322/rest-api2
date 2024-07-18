@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllCitas,getCitasDisponibles, getCitaById, addNewCita,eliminarCita,actualizarCitas,actualizarCitasDisponibles ,getAllCitasHoy,getCitasByDayOfWeek,getCitasByDayOfWeekAndTime} from "../controllers/citas.controller";
+import { getAllCitas,getCitasDisponibles, getCitaById, addNewCita,eliminarCita,actualizarCitas,actualizarCitasDisponibles ,getAllCitasHoy,getCitasByDayOfWeek,getCitasByDayOfWeekAndTime, getCitasByPatientFullName} from "../controllers/citas.controller";
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.get("/citas-disponibles", getCitasDisponibles);
 router.get("/citas-hoy", getAllCitasHoy);
 router.get('/citas-dia/:numeroDia', getCitasByDayOfWeek);
 router.get('/citas-dia-hora/:numeroDia/:horaInicio', getCitasByDayOfWeekAndTime);
+router.get("/citas-paciente/:nombre/:apellidoP/:apellidoM", getCitasByPatientFullName);
 router.get("/citas/:IdCita", getCitaById); // Obtener una cita por su ID
 router.post("/citas", addNewCita); // Agregar una nueva cita
 router.put("/citas/:id", actualizarCitas);

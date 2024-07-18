@@ -1,3 +1,5 @@
+import { getCitasByPatientFullName } from "../controllers/citas.controller";
+
 export const querys = {
   getAllProducts: "SELECT * FROM Productos",
   getProducById: "SELECT * FROM Productos Where Id = @Id",
@@ -44,6 +46,7 @@ export const querysCitas = {
   getAllCitasDay: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE CAST(HorarioInicio AS DATE) = CAST(GETDATE() AS DATE) order by HorarioInicio ",
   getCitasByDayOfWeek: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATEPART(dw, HorarioInicio) = @numeroDia order by HorarioInicio",
   getCitasByDayOfWeekAndTime: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATEPART(dw, HorarioInicio) = @numeroDia AND HorarioInicio >= @HoraInicio order by HorarioInicio",
+  getCitasByPatientFullName: " SELECT C.IdCita, C.IdUser, C.IdDependencia, C.idPaciente, C.HorarioInicio, C.HoraFin, C.Descripcion, C.Estado, P.Nombre, P.ApellidoP, P.ApellidoM FROM Citas AS C INNER JOIN Paciente AS P ON C.idPaciente = P.IdPaciente WHERE P.Nombre LIKE '%' + @Nombre + '%' AND P.ApellidoP = @ApellidoP AND P.ApellidoM = @ApellidoM AND C.HorarioInicio > GETDATE() ORDER BY C.HorarioInicio;"
 }
 
 export const querysPreguntas = {
