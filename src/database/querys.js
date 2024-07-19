@@ -20,7 +20,7 @@ export const querysUsers = {
   getUserByEmail: "SELECT Correo FROM Usuario WHERE Correo = @Correo",
   getUserEmailExist: "SELECT * FROM Usuario WHERE Correo = @Correo",
   login: "SELECT * FROM Usuario WHERE Correo = @correo AND Pass = @pass",
-  resetPassword: "UPDATE Usuario SET Pass = @Pass WHERE Token = @Token",
+  resetPassword: "UPDATE Usuario SET Pass = @Pass, Registro_Pass = GETDATE()  WHERE Token = @Token",
   getUserByToken: "SELECT * FROM Usuario WHERE Token = @Token",
   cambiarHabilitado: "UPDATE Usuario SET Habilitado = @Habilitado WHERE Token=@Token",
   getRegistroPass: "SELECT Registro_Pass FROM Usuario WHERE Correo = @Correo",

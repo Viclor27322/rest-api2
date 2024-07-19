@@ -1,16 +1,16 @@
 import { config } from "dotenv";
 config();
 
-/* export default {
+export default {
   port: process.env.PORT || 3001,
-  dbUser: process.env.DB_USER || "Userrr",
-  dbPassword: process.env.DB_PASSWORD || "Userrr",
+  dbUser: process.env.DB_USER || "User",
+  dbPassword: process.env.DB_PASSWORD || "User",
   dbServer: process.env.DB_SERVER || "localhost",
   dbDatabase: process.env.DB_DATABASE || "BDPrototipo",
-}; */
+};
 
 
-export default {
+/* export default {
  port: process.env.PORT || 3001,
   dbUser: process.env.DB_USER || "sqlserver",
   dbPassword: process.env.DB_PASSWORD || "sqlserver",
@@ -21,3 +21,4 @@ export default {
         trustServerCertificate: false 
     }
 };
+ */
