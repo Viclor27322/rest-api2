@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllCitas,getCitasDisponibles, getCitaById, addNewCita,eliminarCita,actualizarCitas,actualizarCitasDisponibles ,getAllCitasHoy,getCitasByDayOfWeek,getCitasByDayOfWeekAndTime, getCitasByPatientFullName} from "../controllers/citas.controller";
+import { getAllCitas,getCitasDisponibles, getCitaById, addNewCita,eliminarCita,actualizarCitas,actualizarCitasDisponibles ,getAllCitasHoy,getCitasByDayOfWeek,getCitasByDayOfWeekAndTime, getCitasByPatientFullName, getAllCitasHoyHour} from "../controllers/citas.controller";
 
 const router = express.Router();
 
@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/citas", getAllCitas); // Obtener todas las citas
 router.get("/citas-disponibles", getCitasDisponibles);
 router.get("/citas-hoy", getAllCitasHoy);
+router.get("/citas-hoy-hora", getAllCitasHoyHour);
 router.get('/citas-dia/:numeroDia', getCitasByDayOfWeek);
 router.get('/citas-dia-hora/:numeroDia/:horaInicio', getCitasByDayOfWeekAndTime);
 router.get("/citas-paciente/:nombre/:apellidoP/:apellidoM", getCitasByPatientFullName);
