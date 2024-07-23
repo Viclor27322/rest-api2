@@ -33,6 +33,15 @@ export const getAllCitasHoy = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+export const getAllCitasHoyHour = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const result = await pool.request().query(querysCitas.getAllCitasDayHour);
+    res.json(result.recordset);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 
 export const getCitasByDayOfWeek = async (req, res) => {
   const numeroDia = parseInt(req.params.numeroDia);
