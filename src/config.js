@@ -8,7 +8,6 @@ config();
   dbServer: process.env.DB_SERVER || "localhost",
   dbDatabase: process.env.DB_DATABASE || "BDPrototipo",
 };
- */
 
 export default {
  port: process.env.PORT || 3001,

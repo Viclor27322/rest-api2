@@ -28,7 +28,7 @@ export const querysUsers = {
   verificarCuentaBloqueada: "SELECT Cuenta from Usuario WHERE Correo = @Correo",
   verificarHabilitado: "SELECT Habilitado from Usuario WHERE Correo = @Correo",
   verificarPreguntaSeguridad: "SELECT 1 FROM Usuario WHERE Correo=@Correo AND IdPregunta=@IdPregunta AND Respuesta=@Respuesta",
-  actualizarContraseña: "UPDATE Usuario SET Pass = @Pass WHERE Correo = @Correo",
+  actualizarContraseña: "UPDATE Usuario SET Pass = @Pass,  Registro_Pass = GETDATE() WHERE Correo = @Correo",
 };  
 
 export const querysCitas = {
