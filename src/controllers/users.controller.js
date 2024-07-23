@@ -441,3 +441,24 @@ export const recuperarContraseñaPorPregunta = async (req, res) => {
     res.status(500).json({ msg: 'Error interno del servidor al restablecer la contraseña' });
   }
 };
+
+export const validateToken = async (req, res) => {
+  const token = req.query.token;
+
+  if (!token) {
+    return res.status(400).send({ message: 'Token is required' });
+  }
+
+  try {
+    const result = await sql.query`SELECT * FROM Users WHERE Token = ${token}`;
+
+    if (result.recordset.length > 0) {
+      res.send({ valid: true, user: result.recordset[0] });
+    } else {
+      res.send({ valid: false });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error validating token' });
+  }
+};

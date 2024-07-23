@@ -13,7 +13,8 @@ import {
   cambiarHabilitado,
   bloquear,
   verificarRecuperacionPorPregunta,
-  recuperarContraseñaPorPregunta
+  recuperarContraseñaPorPregunta,
+  validateToken
 } from "../controllers/users.controller"; // Asegúrate de importar los controladores de usuarios
 
 const router =  Router();
@@ -36,7 +37,7 @@ router.put("/users/:id", updateUserById);
 
 router.post("/users/login", login);
 
-router.post("/users/reset-password", resetPassword);
+router.post("/users/reset-password  ", resetPassword);
 
 router.post("/users/resert-Habilitado", cambiarHabilitado );
 
@@ -45,6 +46,8 @@ router.post("/users/bloquearCuenta", bloquear);
 router.post("/users/recuperacionpregunta", verificarRecuperacionPorPregunta)
 
 router.post("/users/reset-password-pregunta", recuperarContraseñaPorPregunta)
+
+router.get('/users/validate-token', validateToken);
 
 
 export default router;
