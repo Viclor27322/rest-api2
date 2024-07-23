@@ -47,7 +47,7 @@ router.post("/users/recuperacionpregunta", verificarRecuperacionPorPregunta)
 
 router.post("/users/reset-password-pregunta", recuperarContraseñaPorPregunta)
 
-router.get('/users/validate-token', validateToken);
+router.get('/users/validate-token/:token', validateToken);
 
 
 export default router;

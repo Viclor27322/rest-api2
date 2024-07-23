@@ -443,14 +443,18 @@ export const recuperarContraseñaPorPregunta = async (req, res) => {
 };
 
 export const validateToken = async (req, res) => {
-  const token = req.query.token;
+  const token =req.params.token;
 
   if (!token) {
     return res.status(400).send({ message: 'Token is required' });
   }
 
   try {
-    const result = await sql.query`SELECT * FROM Users WHERE Token = ${token}`;
+    const pool = await getConnection();
+    const result =await pool
+      .request()
+      .input("Token", sql.VarChar, token)
+      .query(querysUsers.validateToken);
 
     if (result.recordset.length > 0) {
       res.send({ valid: true, user: result.recordset[0] });
