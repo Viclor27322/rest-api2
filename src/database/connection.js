@@ -1,24 +1,20 @@
-import sql from "mssql";
-import config from "../config";
+import mysql from 'mysql2/promise';
+import config from '../config';
 
 export const dbSettings = {
+  host: config.dbServer,
   user: config.dbUser,
   password: config.dbPassword,
-  server: config.dbServer,
   database: config.dbDatabase,
-  options: {
-    encrypt: true, // for azure
-    trustServerCertificate: true, // change to true for local dev / self-signed certs
-  },
 };
 
 export const getConnection = async () => {
   try {
-    const pool = await sql.connect(dbSettings);
+    const pool = await mysql.createConnection(dbSettings);
     return pool;
   } catch (error) {
-    console.error(error);
+    console.error('Error de conexión: ', error);
   }
 };
 
-export { sql };
+export { mysql };

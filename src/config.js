@@ -10,13 +10,9 @@ config();
 };
 */
 export default {
- port: process.env.PORT || 3001,
-  dbUser: process.env.DB_USER || "sqlserver",
-  dbPassword: process.env.DB_PASSWORD || "sqlserver",
-  dbServer: process.env.DB_SERVER || "35.192.19.210",
-  dbDatabase: process.env.DB_DATABASE || "BDPrototipo",
-  options: {
-        encrypt: false,
-        trustServerCertificate: false 
-    }
+  port: process.env.PORT || 3001,
+  dbUser: process.env.DB_USER || 'u549185319_Cu549185319_',
+  dbPassword: process.env.DB_PASSWORD || 'Cu549185319_',
+  dbServer: process.env.DB_SERVER || '193.203.166.204',
+  dbDatabase: process.env.DB_DATABASE || 'u549185319_Cirupied',
 };
