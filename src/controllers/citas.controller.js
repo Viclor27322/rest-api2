@@ -141,7 +141,7 @@ export const addNewCita = async (req, res) => {
 
 async function verificarCitasSuperpuestas(HorarioInicio, HoraFin) {
   const pool = await getConnection();
-  const [rows] = await pool.query(querysCitas.verificarCitasHorario, [HorarioInicio, HoraFin]);
+  const [rows] = await pool.query(querysCitas.verificarCitasHorario, [HorarioInicio, HoraFin, HorarioInicio, HoraFin, HorarioInicio, HoraFin]);
   return rows;
 }
 
