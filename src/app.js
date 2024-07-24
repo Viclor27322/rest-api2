@@ -21,7 +21,11 @@ app.set("port", config.port);
 
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'https://cirupied-eight.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
+}));
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
