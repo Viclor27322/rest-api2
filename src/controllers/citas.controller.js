@@ -34,6 +34,24 @@ export const getAllCitasHoy = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+export const getAllCitasHoyDisponible = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const [rows] = await pool.query(querysCitas.getAllCitasDayDisponible);
+    res.json(rows);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+export const getAllProxDisponible = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const [rows] = await pool.query(querysCitas.getCitasByProxDisponible);
+    res.json(rows);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 export const getAllCitasHoyHour = async (req, res) => {
   try {
     const pool = await getConnection();

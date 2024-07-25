@@ -1,12 +1,14 @@
 import express from "express";
-import { getAllCitas,getCitasDisponibles, getCitaById, addNewCita,eliminarCita,actualizarCitas,actualizarCitasDisponibles ,getAllCitasHoy,getCitasByDayOfWeek,getCitasByDayOfWeekAndTime, getCitasByPatientFullName, getAllCitasHoyHour} from "../controllers/citas.controller";
+import { getAllCitas,getCitasDisponibles, getCitaById, addNewCita,eliminarCita,actualizarCitas,actualizarCitasDisponibles ,getAllCitasHoy,getCitasByDayOfWeek,getCitasByDayOfWeekAndTime, getCitasByPatientFullName, getAllCitasHoyHour, getAllCitasHoyDisponible, getAllProxDisponible} from "../controllers/citas.controller";
 
 const router = express.Router();
 
 // Rutas para citas
 router.get("/citas", getAllCitas); // Obtener todas las citas
 router.get("/citas-disponibles", getCitasDisponibles);
+router.get("/citas-proximas-disponibles", getAllProxDisponible);
 router.get("/citas-hoy", getAllCitasHoy);
+router.get("/citas-hoy-disponibles", getAllCitasHoyDisponible);
 router.get("/citas-hoy-hora", getAllCitasHoyHour);
 router.get('/citas-dia/:numeroDia', getCitasByDayOfWeek);
 router.get('/citas-dia-hora/:numeroDia/:horaInicio', getCitasByDayOfWeekAndTime);
