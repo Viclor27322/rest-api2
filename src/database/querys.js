@@ -78,7 +78,7 @@ export const querysNotas = {
 
 export const querysHorarios = {
   getAllHorarios: "SELECT * FROM HorariosAtencion",
-  updateHorarios: "UPDATE HorariosAtencion SET HoraInicio = @HoraInicio, HoraFin = @HoraFin, Estado = @Estado WHERE Dia = @Dia",
+  updateHorarios: "UPDATE HorariosAtencion SET HoraInicio = ?, HoraFin = ?, Estado = ? WHERE Dia = ?",
   getHorariosActivos: "SELECT * FROM HorariosAtencion WHERE Estado = 1",
   getHorariosDia: "SELECT * FROM HorariosAtencion WHERE Dia = ?"
 };

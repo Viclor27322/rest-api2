@@ -1,8 +1,7 @@
 import { getConnection, querysHorarios } from "../database";
-import sql from 'mssql';
-import cron from 'node-cron';
 import moment from 'moment';
-import { addSpecificCita,eliminarCitasPorDia } from './citas.controller';
+import cron from 'node-cron';
+import { addSpecificCita, eliminarCitasPorDia } from './citas.controller';
 
 // Obtener los horarios de atención
 export const obtenerHorariosAtencion = async (req, res) => {
@@ -24,10 +23,9 @@ export const actualizarHorarioAtencion = async (req, res) => {
     const estadoReal = estado === "true" ? 1 : 0;
     try {
         const pool = await getConnection();
-        await pool.query(querysHorarios.updateHorarios, [dia, horaInicio, horaFin, estadoReal]);
+        await pool.query(querysHorarios.updateHorarios, [horaInicio, horaFin, estadoReal, dia]);
         
         await eliminarCitasPorDia(dia);
-        console.log(estadoReal);
         
         if (estadoReal !== 0) {
             const horarios = await obtenerHorariosDia(dia);
