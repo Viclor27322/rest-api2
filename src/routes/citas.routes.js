@@ -17,6 +17,6 @@ router.get("/citas/:IdCita", getCitaById); // Obtener una cita por su ID
 router.post("/citas", addNewCita); // Agregar una nueva cita
 router.put("/citas/:id", actualizarCitas);
 router.put("/citas-disponibles/:id", actualizarCitasDisponibles);
-router.delete("/citas/:id", eliminarCita); 
+router.delete("/citas/:id ", eliminarCita); 
 
 export default router;  

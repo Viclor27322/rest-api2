@@ -9,6 +9,7 @@ import pacientesRoutes from "./routes/pacientes.routes";
 import notasRoutes from "./routes/notas.routes";
 import horariosRoutes from "./routes/horarios.routes";
 import cruzRoutes from "./routes/cruzroja.routes";
+import heridasRoutes from "./routes/heridas.routes"
 import morgan from "morgan";
 
 import config from "./config";
@@ -66,5 +67,6 @@ app.use("/api", pacientesRoutes);
 app.use("/api", notasRoutes);
 app.use("/api", horariosRoutes);
 app.use("/api", cruzRoutes);
+app.use("/api", heridasRoutes);
 
 export { app };

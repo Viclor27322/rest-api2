@@ -80,5 +80,19 @@ export const querysHorarios = {
   getAllHorarios: "SELECT * FROM HorariosAtencion",
   updateHorarios: "UPDATE HorariosAtencion SET HoraInicio = @HoraInicio, HoraFin = @HoraFin, Estado = @Estado WHERE Dia = @Dia",
   getHorariosActivos: "SELECT * FROM HorariosAtencion WHERE Estado = 1",
-  getHorariosDia: "SELECT * FROM HorariosAtencion WHERE Dia = @Dia"
+  getHorariosDia: "SELECT * FROM HorariosAtencion WHERE Dia = ?"
+};
+
+export const querysHeridas = {
+  insertClasificacionHeridas: "INSERT INTO ClasificacionHeridas  (IdPaciente, LocalizacionInicial, AspectoTopografico, Registrar_Aspecto, NumeroZonasAfectadas, Registrar_Zonas, Isquemia, Infeccion, Edema, Neuropatia, Profundidad, Area, FaseCicatrizacion, FechaCreacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW() - INTERVAL 6 HOUR)",
+  getClasificacionHeridas: `SELECT * FROM ClasificacionHeridas WHERE IdClasificacionHeridas = ?`,
+  getAllClasificacionHeridas: `SELECT * FROM ClasificacionHeridas`,
+  updateClasificacionHeridas: `
+  UPDATE ClasificacionHeridas 
+  SET LocalizacionInicial = ?, AspectoTopografico = ?, Registrar_Aspecto = ?, NumeroZonasAfectadas = ?, Registrar_Zonas = ?, Isquemia = ?, Infeccion = ?, Edema = ?, Neuropatia = ?, Profundidad = ?, Area = ?, FaseCicatrizacion = ?
+  WHERE IdClasificacionHeridas = ? 
+  `,
+  deleteClasificacionHeridas: `
+  DELETE FROM ClasificacionHeridas WHERE IdClasificacionHeridas = ?
+  `
 };
