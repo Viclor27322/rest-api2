@@ -42,7 +42,7 @@ export const querysCitas = {
   updateCitaDisponible: "UPDATE Citas SET IdPaciente = ?, Estado = 1 WHERE IdCita = ?",
   verificarCitasHorario: "SELECT * FROM Citas WHERE (? BETWEEN HorarioInicio AND HoraFin OR ? BETWEEN HorarioInicio AND HoraFin) OR (HorarioInicio BETWEEN ? AND ? OR HoraFin BETWEEN ? AND ?)",
   verificarCitasDobles: "SELECT * FROM Citas WHERE idPaciente = ? AND DATE(HorarioInicio) = DATE(?)",
-  deleteCitasHorario: "DELETE FROM Citas WHERE DAYOFWEEK(HorarioInicio) = ? AND idPaciente = ?",
+  deleteCitasHorario: "DELETE FROM Citas WHERE DAYOFWEEK(HorarioInicio) = ? ",
   getAllCitasDay: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP, ApellidoM FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATE(HorarioInicio) = DATE(NOW() - INTERVAL 6 HOUR) AND Estado = 1 ORDER BY HorarioInicio;",
   getAllCitasDayDisponible: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP, ApellidoM FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATE(HorarioInicio) = DATE(NOW() - INTERVAL 6 HOUR) AND Estado = 0 ORDER BY HorarioInicio;",
   getAllCitasDayHour: "SELECT IdCita, IdUser, IdDependencia, Citas.idPaciente, HorarioInicio, HoraFin, Descripcion, Estado, Nombre, ApellidoP, ApellidoM FROM Citas INNER JOIN Paciente ON Citas.idPaciente = Paciente.IdPaciente WHERE DATE(HorarioInicio) = DATE(NOW() - INTERVAL 6 HOUR) AND TIME(HorarioInicio) > TIME(NOW() - INTERVAL 6 HOUR) ORDER BY HorarioInicio;",

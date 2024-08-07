@@ -18,12 +18,12 @@ export const obtenerHorariosAtencion = async (req, res) => {
 // Actualizar un horario de atención
 export const actualizarHorarioAtencion = async (req, res) => {
     const { dia } = req.params;
-    const { horaInicio, horaFin, estado } = req.body;
+    const { HoraInicio, HoraFin, Estado } = req.body;
+    const estadoReal = Estado === 1 ? 1 : 0;
     
-    const estadoReal = estado === "true" ? 1 : 0;
     try {
         const pool = await getConnection();
-        await pool.query(querysHorarios.updateHorarios, [horaInicio, horaFin, estadoReal, dia]);
+        await pool.query(querysHorarios.updateHorarios, [HoraInicio, HoraFin, estadoReal, dia]);
         
         await eliminarCitasPorDia(dia);
         
@@ -112,8 +112,8 @@ const recrearCitasSegunHorario2 = async (horarios) => {
         for (let horario of horarios) {
             const dia = obtenerNumeroDia(horario.Dia);
             const dayOfWeek = moment().day(dia);
-            const startHour = moment(horario.HoraInicio);
-            const endHour = moment(horario.HoraFin);
+            const startHour = moment(`2023-01-01 ${horario.HoraInicio}`, 'YYYY-MM-DD HH:mm:ss');
+            const endHour = moment(`2023-01-01 ${horario.HoraFin}`, 'YYYY-MM-DD HH:mm:ss');
             const startDate = dayOfWeek.clone().hour(startHour.hour()).minute(startHour.minute());
             const endDate = dayOfWeek.clone().hour(endHour.hour()).minute(endHour.minute());
 
