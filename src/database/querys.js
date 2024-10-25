@@ -13,7 +13,7 @@ export const querys = {
 export const querysUsers = {
   getAllUsers: "SELECT * FROM Usuario",
   getUserById: "SELECT * FROM Usuario WHERE IdUser = ?",
-  addNewUser: "INSERT INTO Usuario (Nombre, Correo, Pass, Registro_Pass, Telefono, Habilitado, Cuenta, Token, Logueo, IdRol, IdTipo, IdDependencia, IdPregunta, Respuesta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)",
+  addNewUser: "INSERT INTO Usuario (Nombre, Correo, Pass, Registro_Pass, Telefono, Habilitado, Cuenta, Token, Logueo, IdRol, IdTipo, IdDependencia, IdPregunta, Respuesta, ImagenUrl ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?,'https://res.cloudinary.com/dleyjie7k/image/upload/v1729647834/Cirupied/s4sy140felt41rqjyidz.png')",
   deleteUser: "DELETE FROM Usuario WHERE IdUser = ?",
   getTotalUsers: "SELECT COUNT(*) FROM Usuario",
   updateUserById: "UPDATE Usuario SET Nombre = ?, Correo = ?, Pass = ? WHERE IdUser = ?",
