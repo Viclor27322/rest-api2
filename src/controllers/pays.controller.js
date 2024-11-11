@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Stripe = require('stripe');
-const stripe = new Stripe(process.env.Stripe_Key); // Usa la variable de entorno
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Usa la variable de entorno
 
 // Importa la conexión a la base de datos
 import { getConnection } from "../database";
