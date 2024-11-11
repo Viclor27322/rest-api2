@@ -29,10 +29,20 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: '*', // Permitir todos los orígenes temporalmente
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Permite solicitudes sin origen (ej. Postman)
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      const msg = 'La política CORS para este sitio no permite acceso desde el origen especificado.';
+      return callback(new Error(msg), false);
+    }
+  },
+  credentials: true, // Permitir envío de cookies y autenticación si es necesario
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
