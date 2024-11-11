@@ -69,4 +69,24 @@ app.use("/api", horariosRoutes);
 app.use("/api", cruzRoutes);
 app.use("/api", heridasRoutes);
 
+app.post('/create-payment-intent', async (req, res) => {
+  const { amount, citaId, pacienteId } = req.body; // Información que recibirás del frontend
+
+  try {
+    // Crea el PaymentIntent con el monto y la moneda
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount, // Monto en centavos (por ejemplo, 10000 para 100 MXN)
+      currency: 'mxn', // Define la moneda
+      metadata: { citaId, pacienteId }, // Guarda información extra si es necesario
+    });
+
+    // Envía el client_secret al frontend para completar el pago
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 export { app };
