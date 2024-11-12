@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Usa la variable de 
 import { getConnection } from "../database";
 
 // Guarda el pago exitoso en la base de datos
+/*
 async function guardarPagoEnHistorial(paymentIntent) {
   const connection = await getConnection();
   await connection('historial_pagos').insert({
@@ -14,6 +15,17 @@ async function guardarPagoEnHistorial(paymentIntent) {
     status: paymentIntent.status,
     paymentDate: new Date(),
     paymentId: paymentIntent.id
+  });
+}*/
+// Guarda el pago exitoso en la base de datos
+async function guardarPagoEnHistorial(order) {
+  const connection = await getConnection();
+  await connection('historial_pagos').insert({
+    pacienteId: order.customer_info.email, // Asocia el pago con el email del paciente
+    amount: order.amount || order.line_items[0].unit_price / 100, // Divide entre 100 para obtener el monto en la moneda original
+    status: order.payment_status || 'paid',
+    paymentDate: new Date(),
+    paymentId: order.id
   });
 }
 
@@ -71,7 +83,7 @@ export const createOrder = async (req, res) => {
         }
       }]
     });
-
+    await guardarPagoEnHistorial(order);
     res.json({
       success: true,
       message: 'Pago exitoso',
