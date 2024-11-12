@@ -39,14 +39,15 @@ export const Payment = async (req, res) => {
       metadata: { pacienteId },
     });
 
-    // Guarda el PaymentIntent en la base de datos
-    await guardarPagoEnHistorial(paymentIntent);
-
     // Envía el client_secret al frontend para completar el pago
     res.status(200).json({
       success: true,
       clientSecret: paymentIntent.client_secret,
     });
+    if(res.status(200)){
+      // Guarda el PaymentIntent en la base de datos
+      await guardarPagoEnHistorial(paymentIntent);
+    }
   } catch (error) {
     console.error("Error al crear el PaymentIntent:", error);
     res.status(500).send({ error: error.message });
