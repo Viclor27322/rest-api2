@@ -55,11 +55,12 @@ export const Payment = async (req, res) => {
 
 // src/controllers/paymentsController.js
 
-import Conekta from 'conekta';
+const Conekta = require('conekta');
 
-// Configura Conekta con tu API Key privada y la versión de API
-Conekta.api_key = process.env.CONEKTA_PRIVATE_KEY; // Guarda esto en tu .env
-Conekta.api_version = '2.0.0'; // Asegúrate de estar usando la última versión de la API
+Conekta.api_key = process.env.CONEKTA_PRIVATE_KEY; // Debes tener CONEKTA_PRIVATE_KEY en tu archivo .env
+Conekta.api_version = '2.0.0'; // Usa la versión adecuada
+Conekta.locale = 'es'; // Define el idioma de la respuesta (opcional)
+
 
 export const createOrder = async (req, res) => {
   const { amount, currency, name, email } = req.body;
