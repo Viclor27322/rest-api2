@@ -14,7 +14,7 @@ async function guardarPagoEnHistorial(paymentIntent) {
     const values = [
       paymentIntent.metadata.pacienteId,
       paymentIntent.amount,
-      paymentIntent.status,
+      'succeeded',
       new Date(),
       paymentIntent.id
     ];
