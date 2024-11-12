@@ -112,3 +112,19 @@ export const createOrder = async (req, res) => {
     });
   }
 };
+
+
+export const obtenerHistorialPagos = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const [historial] = await pool.query(`
+      SELECT pacienteId, amount, status, paymentDate, paymentId
+      FROM historial_pagos
+      ORDER BY paymentDate DESC
+    `);
+    res.json(historial);
+  } catch (error) {
+    console.error("Error al obtener el historial de pagos:", error);
+    res.status(500).json({ error: "Error al obtener el historial de pagos" });
+  }
+};
