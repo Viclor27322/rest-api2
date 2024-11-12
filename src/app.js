@@ -12,7 +12,7 @@ import cruzRoutes from "./routes/cruzroja.routes";
 import heridasRoutes from "./routes/heridas.routes"
 import paysRoutes from "./routes/pays.routes";
 import morgan from "morgan";
-
+require('dotenv').config();
 import config from "./config";
 
 const app = express();

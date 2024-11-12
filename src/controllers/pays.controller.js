@@ -1,24 +1,60 @@
 require('dotenv').config();
 const Stripe = require('stripe');
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Usa la variable de entorno
-
-// Importa la conexión a la base de datos
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 import { getConnection } from "../database";
 
-// Guarda el pago exitoso en la base de datos
-/*
+// Función para guardar el pago en el historial
 async function guardarPagoEnHistorial(paymentIntent) {
-  const connection = await getConnection();
-  await connection('historial_pagos').insert({
-    pacienteId: paymentIntent.metadata.pacienteId,
-    amount: paymentIntent.amount,
-    status: paymentIntent.status,
-    paymentDate: new Date(),
-    paymentId: paymentIntent.id
-  });
-}*/
+  try {
+    const pool = await getConnection();
+    const query = `
+      INSERT INTO historial_pagos (pacienteId, amount, status, paymentDate, paymentId)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    const values = [
+      paymentIntent.metadata.pacienteId,
+      paymentIntent.amount,
+      paymentIntent.status,
+      new Date(),
+      paymentIntent.id
+    ];
+
+    await pool.query(query, values);
+    console.log("Pago guardado en historial con éxito");
+  } catch (error) {
+    console.error("Error al guardar el pago en el historial:", error);
+    throw error;
+  }
+}
+
+// Controlador de pago
+export const Payment = async (req, res) => {
+  const { amount, pacienteId } = req.body;
+
+  try {
+    // Crea el PaymentIntent en Stripe
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount, // en centavos
+      currency: 'mxn',
+      metadata: { pacienteId },
+    });
+
+    // Guarda el PaymentIntent en la base de datos
+    await guardarPagoEnHistorial(paymentIntent);
+
+    // Envía el client_secret al frontend para completar el pago
+    res.status(200).json({
+      success: true,
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    console.error("Error al crear el PaymentIntent:", error);
+    res.status(500).send({ error: error.message });
+  }
+};
+
 // Guarda el pago exitoso en la base de datos
-async function guardarPagoEnHistorial(order) {
+/*async function guardarPagoEnHistorial(order) {
   const connection = await getConnection();
   await connection('historial_pagos').insert({
     pacienteId: order.customer_info.email, // Asocia el pago con el email del paciente
@@ -27,46 +63,23 @@ async function guardarPagoEnHistorial(order) {
     paymentDate: new Date(),
     paymentId: order.id
   });
-}
-
-export const Payment = async (req, res) => {
-  const { amount, pacienteId } = req.body; // Información que recibes del frontend
-
-  try {
-    // Crea el PaymentIntent con el monto y la moneda
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount, // Monto en centavos (por ejemplo, 10000 para 100 MXN)
-      currency: 'mxn', // Define la moneda
-      metadata: { pacienteId }, // Guarda información extra si es necesario
-    });
-
-    // Guarda el PaymentIntent en la base de datos
-    await guardarPagoEnHistorial(paymentIntent);
-
-    // Envía el client_secret al frontend para completar el pago
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-};
-
-
+}*/
 // src/controllers/paymentsController.js
-
 const Conekta = require('conekta');
 
-Conekta.api_key = process.env.CONEKTA_PRIVATE_KEY; // Debes tener CONEKTA_PRIVATE_KEY en tu archivo .env
-Conekta.api_version = '2.0.0'; // Usa la versión adecuada
-Conekta.locale = 'es'; // Define el idioma de la respuesta (opcional)
-
+Conekta.api_key = process.env.CONEKTA_PRIVATE_KEY;
+Conekta.api_version = '2.0.0';
+Conekta.locale = 'es';
 
 export const createOrder = async (req, res) => {
-  const { amount, currency, name, email } = req.body;
+  const { amount, currency, name, email, token } = req.body;
+
+  console.log("API Key:", Conekta.api_key); // Verificar si la clave está configurada
 
   try {
-    const order = await Conekta.Order.create({
+    const ordersApi = new Conekta.OrdersApi(); // Instancia de OrdersApi
+
+    const order = await ordersApi.createOrder({
       currency: currency || 'MXN',
       customer_info: {
         name: name,
@@ -74,24 +87,24 @@ export const createOrder = async (req, res) => {
       },
       line_items: [{
         name: "Pago por servicio",
-        unit_price: amount * 100, // Conekta espera el monto en centavos
+        unit_price: amount * 100,
         quantity: 1
       }],
       charges: [{
         payment_method: {
           type: "card",
-          token_id: req.body.token // Este token lo obtendremos en el frontend
+          token_id: token
         }
       }]
     });
-    await guardarPagoEnHistorial(order);
+
     res.json({
       success: true,
       message: 'Pago exitoso',
       data: order
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error creando la orden:", error);
     res.status(500).json({
       success: false,
       message: 'Error al procesar el pago',
