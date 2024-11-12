@@ -39,3 +39,50 @@ export const Payment = async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 };
+
+
+// src/controllers/paymentsController.js
+
+import Conekta from 'conekta';
+
+// Configura Conekta con tu API Key privada y la versión de API
+Conekta.api_key = process.env.CONEKTA_PRIVATE_KEY; // Guarda esto en tu .env
+Conekta.api_version = '2.0.0'; // Asegúrate de estar usando la última versión de la API
+
+export const createOrder = async (req, res) => {
+  const { amount, currency, name, email } = req.body;
+
+  try {
+    const order = await Conekta.Order.create({
+      currency: currency || 'MXN',
+      customer_info: {
+        name: name,
+        email: email
+      },
+      line_items: [{
+        name: "Pago por servicio",
+        unit_price: amount * 100, // Conekta espera el monto en centavos
+        quantity: 1
+      }],
+      charges: [{
+        payment_method: {
+          type: "card",
+          token_id: req.body.token // Este token lo obtendremos en el frontend
+        }
+      }]
+    });
+
+    res.json({
+      success: true,
+      message: 'Pago exitoso',
+      data: order
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al procesar el pago',
+      error: error.message
+    });
+  }
+};
