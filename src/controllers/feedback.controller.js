@@ -20,6 +20,23 @@ export const agregarFeedback = async (req, res) => {
   }
 };
 
+export const verificarFeedbackExistente = async (req, res) => {
+    const { pacienteId } = req.params;
+    try {
+      const connection = await getConnection();
+      const [result] = await connection.query(
+        'SELECT * FROM feedback WHERE pacienteId = ?',
+        [pacienteId]
+      );
+      if (result.length > 0) {
+        return res.json({ exists: true });
+      }
+      res.json({ exists: false });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
 export const obtenerFeedback = async (req, res) => {
     const { citaId } = req.params;
 
