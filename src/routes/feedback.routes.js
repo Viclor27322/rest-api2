@@ -5,5 +5,5 @@ const router =  Router();
 
 router.post('/feedback', agregarFeedback);
 router.post('/obtener_feedback', obtenerFeedback);
-rrouter.get("/existe_feedback/:pacienteId", verificarFeedbackExistente);
+router.get("/existe_feedback/:pacienteId", verificarFeedbackExistente);
 export default router;
