@@ -11,6 +11,7 @@ import horariosRoutes from "./routes/horarios.routes";
 import cruzRoutes from "./routes/cruzroja.routes";
 import heridasRoutes from "./routes/heridas.routes"
 import paysRoutes from "./routes/pays.routes";
+import feedBackRoutes from "./routes/feedback.routes";
 import morgan from "morgan";
 require('dotenv').config();
 import config from "./config";
@@ -72,5 +73,6 @@ app.use("/api", horariosRoutes);
 app.use("/api", cruzRoutes);
 app.use("/api", heridasRoutes);
 app.use("/api", paysRoutes);
+app.use("/api", feedBackRoutes);
 
 export { app };
