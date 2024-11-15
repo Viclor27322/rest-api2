@@ -27,7 +27,7 @@ app.set("port", config.port);
 const allowedOrigins = [
   'http://localhost:3000',
   'https://cirupied-eight.vercel.app',
-  'https://pwa-cirupied.vercel.app/'
+  'https://pwa-cirupied.vercel.app'
 ];
 
 app.use(cors({
