@@ -4,7 +4,7 @@ import { agregarFeedback, obtenerFeedback, verificarFeedbackExistente} from "../
 const router =  Router();
 
 router.post('/feedback', agregarFeedback);
-router.post('/obtener_feedback', obtenerFeedback);
+router.get('/obtener_feedback', obtenerFeedback);
 router.get("/existe_feedback/:pacienteId", verificarFeedbackExistente);
 export default router;
 
