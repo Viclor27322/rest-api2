@@ -54,6 +54,28 @@ export const Payment = async (req, res) => {
   }
 };
 
+export const PaymentAlevosia = async (req, res) => {
+  const { amount, User } = req.body;
+
+  try {
+    // Crea el PaymentIntent en Stripe
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount, // en centavos
+      currency: 'mxn',
+      metadata: { User },
+    });
+
+    // Envía el client_secret al frontend para completar el pago
+    res.status(200).json({
+      success: true,
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    console.error("Error al crear el PaymentIntent:", error);
+    res.status(500).send({ error: error.message });
+  }
+};
+
 // Guarda el pago exitoso en la base de datos
 /*async function guardarPagoEnHistorial(order) {
   const connection = await getConnection();
